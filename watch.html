@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WATCH-!T</title>
+	<link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="file:///C|/Users/Welcome/Documents/Unnamed Site 2/watch.css">
+  <style>
+    /* ... (existing styles) ... */
+	  .wrapper{
+		  box-sizing: border-box 10;
+		  
+	  }
+    .sub-option {
+      cursor: pointer;
+      margin-bottom: 5px;
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: 1px solid #4caf50;
+      border-radius: 5px;
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .sub-option:hover {
+      background-color: #45a049;
+    }
+
+    .dropdown {
+      display: inline-block;
+      position: relative; /* Add this line to set the position to relative */
+    }
+
+    .option {
+      display: none;
+      position: absolute; /* Add this line to position the dropdown absolute to the parent */
+      top: 100%; /* Add this line to position the dropdown below the button */
+      left: 0; /* Add this line to align the dropdown with the left edge of the button */
+      z-index: 1; /* Add this line to ensure the dropdown is on top of other elements */
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .show {
+      display: block;
+    }
+
+  /*  #video-container {
+		height: 100px;
+      width: 70%; /* Adjust the width as needed 
+	  margin-left: auto; /* Align to the right 
+      
+    }*/
+	  #video-player{
+		  height: 540;
+		  width: 420;
+		
+	  }  
+  </style>
+</head>
+<body>
+	
+	<header class="logo">
+	<a href="file:///C|/Users/Welcome/Documents/Unnamed Site 2/watch-it.html">WATCH-!T</a>
+	
+	<div>
+		
+		
+		
+		
+		</div>
+	
+	
+	</header>
+	
+	
+	
+	
+<div>
+<div class="wrapper">
+  <div class="options-container">
+    <div class="dropdown">
+    <button>  <div class="dropdown-btn" onclick="toggleOptions('dropdownOptions')">
+        Click here for options
+		  
+      </div></button>
+      <div class="option" id="dropdownOptions">
+        <input type="text" oninput="filterOptions()" placeholder="Search..." class="search-box">
+        <div class="option-content" id="option1-content">
+          <div class="sub-option" onclick="showTableOutside('Sub-option 1')">Sub-option 1</div>
+          <div class="sub-option" onclick="showTableOutside('Sub-option 2')">Sub-option 2</div>
+          <div class="sub-option" onclick="showTableOutside('Sub-option 3')">Sub-option 3</div>
+        </div>
+        <!-- Add more options as needed -->
+      </div>
+    </div>
+
+    <div id="subOptionTable" class="nested-list"></div>
+  </div>
+
+  <div id="video-container">
+	  <center>
+    <video id="video-player" controls>
+      Your browser does not support the video tag.
+    </video></center>
+  </div>
+</div>
+</div>
+<script>
+ var subOptionsData = {
+  'Sub-option 1': {
+    videos: [
+      { serial: 1, link: 'path/to/your/video1.mp4', customName: 'Aman Video 1' },
+      { serial: 2, link: 'path/to/your/video2.mp4', customName: 'Aman Video 2' },
+      { serial: 3, link: 'path/to/your/video3.mp4', customName: 'Aman Video 3' }
+    ]
+  },
+  'Sub-option 2': {
+    videos: [
+      { serial: 4, link: 'path/to/your/video4.mp4', customName: 'Rio Video 1' },
+      { serial: 5, link: 'path/to/your/video5.mp4', customName: 'Rio Video 2' },
+      { serial: 6, link: 'path/to/your/video6.mp4', customName: 'Rio Video 3' }
+    ]
+  },
+  'Sub-option 3': {
+    videos: [
+      { serial: 7, link: 'path/to/your/video7.mp4', customName: 'King Video 1' },
+      { serial: 8, link: 'path/to/your/video8.mp4', customName: 'King Video 2' },
+      { serial: 9, link: 'path/to/your/video9.mp4', customName: 'King Video 3' }
+    ]
+  }
+};
+  function toggleOptions(optionId) {
+    var optionContent = document.getElementById(optionId);
+    if (optionContent.classList.contains('show')) {
+      optionContent.classList.remove('show');
+    } else {
+      optionContent.classList.add('show');
+    }
+  }
+
+ function filterOptions() {
+  var searchBox = document.querySelector('#dropdownOptions .search-box');
+  var filter = searchBox.value.toUpperCase();
+  var options = document.querySelectorAll('#dropdownOptions .option-content .sub-option');
+
+  options.forEach(option => {
+    var optionText = (option.textContent || option.innerText || '').toUpperCase();
+    if (optionText.indexOf(filter) > -1) {
+      option.style.display = 'block';
+    } else {
+      option.style.display = 'none';
+    }
+  });
+
+  var tableRows = document.querySelectorAll('#subOptionTable table tr');
+
+  tableRows.forEach(row => {
+    var rowVisible = false;
+
+    row.childNodes.forEach(cell => {
+      var cellText = (cell.textContent || cell.innerText || '').toUpperCase();
+
+      if (cellText.indexOf(filter) > -1) {
+        rowVisible = true;
+      }
+    });
+
+    if (rowVisible) {
+      row.style.display = 'table-row';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+  var closeDropdown = true; // Flag to track whether to close the dropdown
+
+  function showTableOutside(subOption) {
+    var subOptionTable = document.getElementById('subOptionTable');
+    subOptionTable.innerHTML = ''; // Clear existing content
+
+    var videos = subOptionsData[subOption].videos;
+
+    var table = document.createElement('table');
+    var headerRow = table.insertRow(0);
+
+    // Assuming 'Serial' and 'Video Link' are common for all sub-options
+    var headers = ['Serial', 'Video Link'];
+    headers.forEach(header => {
+      var th = document.createElement('th');
+      th.textContent = header;
+      headerRow.appendChild(th);
+    });
+
+   for (var i = 0; i < videos.length; i++) {
+    var video = videos[i];
+
+    var row = table.insertRow(i + 1);
+
+    var serialCell = row.insertCell(0);
+    serialCell.textContent = video.serial;
+    serialCell.setAttribute('data-serial', video.serial); // Add data attribute for serial number
+
+    var linkCell = row.insertCell(1);
+    var button = document.createElement('button');
+    var videoButtonName = video.customName || `Play Video ${i + 1}`;
+    button.textContent = videoButtonName;
+    button.classList.add('table-button');
+    button.setAttribute('data-video-button-name', videoButtonName); // Add data attribute for video button name
+
+    // Use a closure to capture the correct videoLink for each button
+    (function (link, name) {
+      button.onclick = function () {
+        playVideo(link);
+        // Set the flag to close the dropdown
+        closeDropdown = true;
+      };
+    })(video.link, videoButtonName);
+
+    linkCell.appendChild(button);
+  }
+
+
+    subOptionTable.appendChild(table);
+
+    if (closeDropdown) {
+      // Close the dropdown after a short delay
+      setTimeout(function() {
+        toggleOptions('dropdownOptions');
+      }, 0);
+    }
+  }
+
+  function playVideo(videoLink) {
+    var videoPlayer = document.getElementById('video-player');
+    videoPlayer.src = videoLink;
+    videoPlayer.play();
+  }
+
+  // Add event listener to close dropdown when clicking elsewhere
+  document.addEventListener('click', function (event) {
+    var dropdown = document.getElementById('dropdownOptions');
+    var dropdownBtn = document.querySelector('.dropdown-btn');
+
+    if (!dropdown.contains(event.target) && event.target !== dropdownBtn) {
+      dropdown.classList.remove('show');
+    }
+  });
+</script>
+
+</body>
+</html>
